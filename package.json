@@ -4,8 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node .bin/www",
+    "watch": "nodemon -w *.js .bin/www",
+    "test-watch": "test --verbose --watch",
+    "test": "jest --verbose"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "express": "^4.19.2",
+    "mongoose": "^8.4.1",
+    "mongoose-autopopulate": "^1.1.0"
+  }
 }
