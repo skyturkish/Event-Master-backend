@@ -1,0 +1,4 @@
+{
+  "watch": ["*.js", "routes/*.js", "models/*.js", "controllers/*.js"],
+  "ext": "js,json"
+}
