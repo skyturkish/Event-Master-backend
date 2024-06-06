@@ -19,4 +19,17 @@ router.post(
   })
 )
 
+router.get(
+  '/:eventId',
+  asyncHandler(async (req, res) => {
+    const { eventId } = req.params
+
+    const event = await eventService.find(eventId)
+
+    if (!event) return res.status(404).send('Cannot find event')
+
+    res.send(event)
+  })
+)
+
 module.exports = router
