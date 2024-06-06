@@ -33,6 +33,7 @@ const EventSchema = new mongoose.Schema(
       maxlength: 512
     },
     creator: discordIDSchema,
+    guild: discordIDSchema,
     participants: [participantSchema],
     declinedParticipants: [participantSchema],
     maybeParticipants: [participantSchema],
