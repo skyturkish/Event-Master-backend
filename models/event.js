@@ -12,11 +12,25 @@ const discordIDSchema = {
   required: true
 }
 
-// Schema for participant lists
-const participantSchema = {
-  ...discordIDSchema,
-  default: []
+// Enum for participant status
+const participantStatusEnum = {
+  values: ['accepted', 'declined', 'maybe', 'invited'],
+  message: 'Status must be one of accepted, declined, maybe, invited'
 }
+
+// Schema for participant
+const participantSchema = new mongoose.Schema(
+  {
+    discordID: discordIDSchema,
+    status: {
+      type: String,
+      enum: participantStatusEnum,
+      required: true,
+      default: 'invited'
+    }
+  },
+  { _id: false }
+)
 
 // Event schema
 const EventSchema = new mongoose.Schema(
@@ -35,9 +49,6 @@ const EventSchema = new mongoose.Schema(
     creator: discordIDSchema,
     guild: discordIDSchema,
     participants: [participantSchema],
-    declinedParticipants: [participantSchema],
-    maybeParticipants: [participantSchema],
-    invitedParticipants: [participantSchema],
     participantLimit: {
       type: Number,
       required: true
@@ -51,7 +62,8 @@ const EventSchema = new mongoose.Schema(
 )
 
 EventSchema.methods.canAddParticipant = function () {
-  return this.participants.length < this.participantLimit
+  const currentParticipants = this.participants.filter((p) => p.status !== 'invited').length
+  return currentParticipants < this.participantLimit
 }
 
 module.exports = mongoose.model('Event', EventSchema)
