@@ -6,6 +6,16 @@ const asyncHandler = (fn) => (req, res, next) => Promise.resolve(fn(req, res, ne
 router.get(
   '/',
   asyncHandler(async (req, res) => {
+    const { guild } = req.query
+
+    if (guild) {
+      const events = await eventService.findByGuildId(guild)
+
+      if (!events.length) return res.status(404).send('No events found for this guild')
+
+      return res.send(events)
+    }
+
     const events = await eventService.load()
     res.send(events)
   })
