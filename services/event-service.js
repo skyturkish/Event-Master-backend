@@ -13,7 +13,7 @@ class EventService extends BaseService {
       throw new Error('Event not found')
     }
 
-    let participant = event.participants.find((p) => p.discordID === participantId)
+    const participant = event.participants.find((p) => p.discordID === participantId)
     if (participant) {
       participant.status = status
     } else {
