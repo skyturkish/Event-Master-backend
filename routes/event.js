@@ -48,19 +48,7 @@ router.put(
     const { eventId, participantId } = req.params
     const { status } = req.body
 
-    const event = await eventService.find(eventId)
-
-    if (!event) return res.status(404).send('Cannot find event')
-
-    let participant = event.participants.find((p) => p.discordID === participantId)
-
-    if (participant) {
-      participant.status = status || 'invited'
-    } else {
-      event.participants.push({ discordID: participantId, status: status || 'invited' })
-    }
-
-    await event.save()
+    const event = await eventService.addOrUpdateParticipant(eventId, participantId, status)
     res.send(event)
   })
 )
