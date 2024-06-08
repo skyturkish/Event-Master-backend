@@ -14,8 +14,8 @@ const discordIDSchema = {
 
 // Enum for participant status
 const participantStatusEnum = {
-  values: ['accepted', 'declined', 'maybe', 'invited'],
-  message: 'Status must be one of accepted, declined, maybe, invited'
+  values: ['attending', 'declined', 'considering', 'invited'],
+  message: 'Status must be one of attending, declined, considering, invited'
 }
 
 // Schema for participant
