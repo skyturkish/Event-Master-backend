@@ -42,4 +42,27 @@ router.get(
   })
 )
 
+router.put(
+  '/:eventId/participants/:participantId',
+  asyncHandler(async (req, res) => {
+    const { eventId, participantId } = req.params
+    const { status } = req.body
+
+    const event = await eventService.find(eventId)
+
+    if (!event) return res.status(404).send('Cannot find event')
+
+    let participant = event.participants.find((p) => p.discordID === participantId)
+
+    if (participant) {
+      participant.status = status || 'invited'
+    } else {
+      event.participants.push({ discordID: participantId, status: status || 'invited' })
+    }
+
+    await event.save()
+    res.send(event)
+  })
+)
+
 module.exports = router
