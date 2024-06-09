@@ -9,7 +9,7 @@ const discordIDSchema = {
     },
     message: (props) => `${props.value} is not a valid Discord ID!`
   },
-  required: true
+  required: [true, 'Discord ID is required!']
 }
 
 // Enum for participant status
@@ -25,7 +25,7 @@ const participantSchema = new mongoose.Schema(
     status: {
       type: String,
       enum: participantStatusEnum,
-      required: true,
+      required: [true, 'Participant status is required!'],
       default: 'invited'
     }
   },
@@ -43,30 +43,31 @@ const EventSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      required: true,
-      minlength: 4,
-      maxlength: 64
+      required: [true, 'Title is required!'],
+      minlength: [4, 'Title must be at least 4 characters long!'],
+      maxlength: [100, 'Title must be less than 101 characters long!']
     },
     description: {
       type: String,
-      minlength: 4,
-      maxlength: 512
+      minlength: [4, 'Description must be at least 4 characters long!'],
+      maxlength: [512, 'Description must be less than 513 characters long!']
     },
     creator: discordIDSchema,
     guild: discordIDSchema,
     participants: [participantSchema],
     participantLimit: {
       type: Number,
-      required: true
+      required: [true, 'Participant limit is required!'],
+      min: [1, 'Participant limit must be at least 1!']
     },
     startTime: {
       type: Date,
-      required: true
+      required: [true, 'Start time is required!']
     },
     status: {
       type: String,
       enum: eventStatusEnum,
-      required: true,
+      required: [true, 'Event status is required!'],
       default: 'not-started'
     }
   },
