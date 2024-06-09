@@ -6,9 +6,9 @@ const asyncHandler = (fn) => (req, res, next) => Promise.resolve(fn(req, res, ne
 router.get(
   '/',
   asyncHandler(async (req, res) => {
-    const { guild, status, participantDiscordID, participantStatus } = req.query
+    const { guild, status, participantDiscordID, participantStatus, creator } = req.query
 
-    const events = await eventService.findByCriteria(guild, status, participantDiscordID, participantStatus)
+    const events = await eventService.findByCriteria(guild, status, participantDiscordID, participantStatus, creator)
 
     if (!events.length) return res.status(404).send('No events found')
 

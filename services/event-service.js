@@ -19,7 +19,7 @@ class EventService extends BaseService {
     return event
   }
 
-  async findByCriteria(guild, status, participantDiscordID, participantStatus) {
+  async findByCriteria(guild, status, participantDiscordID, participantStatus, creator) {
     const query = {}
     if (guild) query.guild = guild
     if (status) query.status = status
@@ -32,6 +32,7 @@ class EventService extends BaseService {
         query['participants.discordID'] = participantDiscordID
       }
     }
+    if (creator) query.creator = creator
     console.log('query:', query)
 
     return this.model.find(query)
