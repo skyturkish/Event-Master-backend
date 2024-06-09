@@ -19,11 +19,19 @@ class EventService extends BaseService {
     return event
   }
 
-  async findByCriteria(guild, status, participantDiscordID) {
+  async findByCriteria(guild, status, participantDiscordID, participantStatus) {
     const query = {}
     if (guild) query.guild = guild
     if (status) query.status = status
-    if (participantDiscordID) query['participants.discordID'] = participantDiscordID
+    if (participantDiscordID) {
+      if (participantStatus) {
+        query['participants'] = {
+          $elemMatch: { discordID: participantDiscordID, status: participantStatus }
+        }
+      } else {
+        query['participants.discordID'] = participantDiscordID
+      }
+    }
     console.log('query:', query)
 
     return this.model.find(query)
