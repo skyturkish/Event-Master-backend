@@ -1,12 +1,7 @@
 const BaseService = require('./base-service')
-
 const Event = require('../models/event')
 
 class EventService extends BaseService {
-  async findByGuildId(guild) {
-    return this.model.find({ guild })
-  }
-
   async addOrUpdateParticipant(eventId, participantId, status = 'invited') {
     const event = await this.find(eventId)
     if (!event) {
@@ -22,6 +17,16 @@ class EventService extends BaseService {
 
     await event.save()
     return event
+  }
+
+  async findByCriteria(guild, status, participantDiscordID) {
+    const query = {}
+    if (guild) query.guild = guild
+    if (status) query.status = status
+    if (participantDiscordID) query['participants.discordID'] = participantDiscordID
+    console.log('query:', query)
+
+    return this.model.find(query)
   }
 }
 
