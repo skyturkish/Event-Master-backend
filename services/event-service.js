@@ -33,9 +33,16 @@ class EventService extends BaseService {
       }
     }
     if (creator) query.creator = creator
-    console.log('query:', query)
 
     return this.model.find(query)
+  }
+
+  async updateEvent(eventId, eventData) {
+    const updatedEvent = await this.model.findByIdAndUpdate(eventId, eventData, { new: true, runValidators: true })
+    if (!updatedEvent) {
+      throw new Error('Event not found')
+    }
+    return updatedEvent
   }
 }
 

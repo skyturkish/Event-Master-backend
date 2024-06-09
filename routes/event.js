@@ -48,4 +48,17 @@ router.put(
   })
 )
 
+router.put(
+  '/:eventId',
+  asyncHandler(async (req, res) => {
+    const { eventId } = req.params
+    const eventData = req.body
+
+    const updatedEvent = await eventService.updateEvent(eventId, eventData)
+    if (!updatedEvent) return res.status(404).send('Event not found')
+
+    res.send(updatedEvent)
+  })
+)
+
 module.exports = router
