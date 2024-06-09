@@ -32,6 +32,12 @@ const participantSchema = new mongoose.Schema(
   { _id: false }
 )
 
+// Enum for event status
+const eventStatusEnum = {
+  values: ['not-started', 'ongoing', 'finished', 'canceled'],
+  message: 'Status must be one of not-started, ongoing, finished, canceled'
+}
+
 // Event schema
 const EventSchema = new mongoose.Schema(
   {
@@ -56,6 +62,12 @@ const EventSchema = new mongoose.Schema(
     startTime: {
       type: Date,
       required: true
+    },
+    status: {
+      type: String,
+      enum: eventStatusEnum,
+      required: true,
+      default: 'not-started'
     }
   },
   { timestamps: true }
