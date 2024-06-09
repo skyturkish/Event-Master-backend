@@ -34,8 +34,8 @@ const participantSchema = new mongoose.Schema(
 
 // Enum for event status
 const eventStatusEnum = {
-  values: ['not-started', 'ongoing', 'finished', 'canceled'],
-  message: 'Status must be one of not-started, ongoing, finished, canceled'
+  values: ['not-started', 'ready-to-start', 'ongoing', 'finished', 'canceled'],
+  message: 'Status must be one of not-started, ready-to-start, ongoing, finished, canceled'
 }
 
 // Event schema
