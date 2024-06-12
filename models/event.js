@@ -12,20 +12,20 @@ const discordIDSchema = {
   required: [true, 'Discord ID is required!']
 }
 
-// Enum for participant status
-const participantStatusEnum = {
+// Enum for user status
+const userStatusEnum = {
   values: ['attending', 'declined', 'considering', 'invited'],
   message: 'Status must be one of attending, declined, considering, invited'
 }
 
-// Schema for participant
-const participantSchema = new mongoose.Schema(
+// Schema for user
+const userSchema = new mongoose.Schema(
   {
     discordID: discordIDSchema,
     status: {
       type: String,
-      enum: participantStatusEnum,
-      required: [true, 'Participant status is required!'],
+      enum: userStatusEnum,
+      required: [true, 'User status is required!'],
       default: 'invited'
     }
   },
@@ -54,7 +54,7 @@ const EventSchema = new mongoose.Schema(
     },
     creator: discordIDSchema,
     guild: discordIDSchema,
-    participants: [participantSchema],
+    users: [userSchema],
     participantLimit: {
       type: Number,
       required: [true, 'Participant limit is required!'],
@@ -74,8 +74,9 @@ const EventSchema = new mongoose.Schema(
   { timestamps: true }
 )
 
+// TODO sil bunu
 EventSchema.methods.canAddParticipant = function () {
-  const currentParticipants = this.participants.filter((p) => p.status !== 'invited').length
+  const currentParticipants = this.users.filter((user) => user.status !== 'invited').length
   return currentParticipants < this.participantLimit
 }
 

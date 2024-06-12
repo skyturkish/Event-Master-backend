@@ -6,9 +6,10 @@ const asyncHandler = (fn) => (req, res, next) => Promise.resolve(fn(req, res, ne
 router.get(
   '/',
   asyncHandler(async (req, res) => {
-    const { guild, status, participantDiscordID, participantStatus, creator } = req.query
 
-    const events = await eventService.findByCriteria(guild, status, participantDiscordID, participantStatus, creator)
+    const { guild, status, userDiscordID, userStatus, creator } = req.query
+
+    const events = await eventService.findByCriteria(guild, status, userDiscordID, userStatus, creator)
 
     if (!events.length) return res.status(404).send('No events found')
 
@@ -38,12 +39,12 @@ router.get(
 )
 
 router.put(
-  '/:eventId/participants/:participantId',
+  '/:eventId/users/:userId',
   asyncHandler(async (req, res) => {
-    const { eventId, participantId } = req.params
+    const { eventId, userId } = req.params
     const { status } = req.body
 
-    const event = await eventService.addOrUpdateParticipant(eventId, participantId, status)
+    const event = await eventService.addOrUpdateUser(eventId, userId, status)
     res.send(event)
   })
 )

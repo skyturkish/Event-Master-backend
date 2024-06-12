@@ -2,34 +2,34 @@ const BaseService = require('./base-service')
 const Event = require('../models/event')
 
 class EventService extends BaseService {
-  async addOrUpdateParticipant(eventId, participantId, status = 'invited') {
+  async addOrUpdateUser(eventId, userId, status = 'invited') {
     const event = await this.find(eventId)
     if (!event) {
       throw new Error('Event not found')
     }
 
-    const participant = event.participants.find((p) => p.discordID === participantId)
-    if (participant) {
-      participant.status = status
+    const user = event.users.find((p) => p.discordID === userId)
+    if (user) {
+      user.status = status
     } else {
-      event.participants.push({ discordID: participantId, status })
+      event.users.push({ discordID: userId, status })
     }
 
     await event.save()
     return event
   }
 
-  async findByCriteria(guild, status, participantDiscordID, participantStatus, creator) {
+  async findByCriteria(guild, status, userDiscordID, userStatus, creator) {
     const query = {}
     if (guild) query.guild = guild
     if (status) query.status = status
-    if (participantDiscordID) {
-      if (participantStatus) {
-        query['participants'] = {
-          $elemMatch: { discordID: participantDiscordID, status: participantStatus }
+    if (userDiscordID) {
+      if (userStatus) {
+        query['users'] = {
+          $elemMatch: { discordID: userDiscordID, status: userStatus }
         }
       } else {
-        query['participants.discordID'] = participantDiscordID
+        query['users.discordID'] = userDiscordID
       }
     }
     if (creator) query.creator = creator
