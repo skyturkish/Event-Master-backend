@@ -1,7 +1,11 @@
 const moment = require('moment')
+const eventService = require('../services/event-service')
 
 const validateParticipantLimit = (req, res, next) => {
   const { participantLimit } = req.body
+
+  if (participantLimit === undefined) return next()
+
   if (isNaN(participantLimit) || participantLimit < 0 || participantLimit > 1000) {
     return res.status(400).send({ error: 'Participant limit must be a number between 0 and 1000.' })
   }
