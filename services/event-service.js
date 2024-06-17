@@ -2,23 +2,6 @@ const BaseService = require('./base-service')
 const Event = require('../models/event')
 
 class EventService extends BaseService {
-  async addOrUpdateUser(eventId, userId, status = 'invited') {
-    const event = await this.find(eventId)
-    if (!event) {
-      throw new Error('Event not found')
-    }
-
-    const user = event.users.find((p) => p.discordID === userId)
-    if (user) {
-      user.status = status
-    } else {
-      event.users.push({ discordID: userId, status })
-    }
-
-    await event.save()
-    return event
-  }
-
   async findByCriteria(guild, status, userDiscordID, userStatus, creator) {
     const query = {}
     if (guild) query.guild = guild
@@ -33,16 +16,14 @@ class EventService extends BaseService {
       }
     }
     if (creator) query.creator = creator
-
     return this.model.find(query)
   }
 
   async updateEvent(eventId, eventData) {
-    const updatedEvent = await this.model.findByIdAndUpdate(eventId, eventData, { new: true, runValidators: true })
-    if (!updatedEvent) {
-      throw new Error('Event not found')
-    }
-    return updatedEvent
+    const event = await this.model.findById(eventId)
+    Object.assign(event, eventData)
+    await event.save()
+    return event
   }
 }
 
