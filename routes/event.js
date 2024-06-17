@@ -42,6 +42,17 @@ router.put(
     const { userId } = req.params
     const { status } = req.body
     const user = req.event.users.find((p) => p.discordID === userId)
+
+    if (req.event.status !== 'not-started' && req.event.status !== 'ready-to-start') {
+      const statusMessages = {
+        ongoing: 'This event is currently ongoing, you can no longer make a decision.',
+        finished: 'This event has already finished, you can no longer make a decision.',
+        canceled: 'This event has been canceled, you can no longer make a decision.'
+      }
+
+      return res.status(400).send({ error: statusMessages[req.event.status] || 'Invalid status' })
+    }
+
     if (user) {
       user.status = status
     } else {
