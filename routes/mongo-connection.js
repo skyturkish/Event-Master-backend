@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-mongoose.connect('mongodb://0.0.0.0:27017/event-master')
+mongoose.connect(process.env.MONGODB_URL || 'mongodb://0.0.0.0:27017/event-master')
 
 var db = mongoose.connection
 
