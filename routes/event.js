@@ -73,7 +73,7 @@ router.put(
     const { participantLimit } = req.body
     const currentParticipants = req.event.users.filter((user) => user.status === 'attending').length
 
-    if (req.event.status !== 'not-started')
+    if (req.body.status != 'finished' && req.event.status !== 'not-started')
       // tüm statuler için özel mesaj gönder
       return res.status(400).send({ error: 'You can only update events that have not started yet.' })
 
