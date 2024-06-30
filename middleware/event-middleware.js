@@ -20,7 +20,7 @@ const validateStartTime = (req, res, next) => {
   }
   const now = moment()
   if (eventTime.isBefore(now)) {
-    return res.status(400).send({ error: 'You cannot create an event in the past.' })
+    return res.status(400).send({ error: 'You cannot interact with an event in the past.' })
   }
   const maxAdvanceTime = moment().add(45, 'days')
   if (eventTime.isAfter(maxAdvanceTime)) {
