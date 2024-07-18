@@ -11,7 +11,9 @@ router.get(
   '/',
   asyncHandler(async (req, res) => {
     const { guild, status, userDiscordID, userStatus, creator } = req.query
+    console.log('get events by these queries', guild, status, userDiscordID, userStatus, creator)
     const events = await eventService.findByCriteria(guild, status, userDiscordID, userStatus, creator)
+    console.log('found events', events)
     if (!events.length) return res.status(404).send({ error: 'No events found' })
     res.send(events)
   })
@@ -22,7 +24,9 @@ router.post(
   validateParticipantLimit,
   validateStartTime,
   asyncHandler(async (req, res) => {
+    console.log('create event', req.body)
     const event = await eventService.insert(req.body)
+    console.log('created event', req.body)
     res.send(event)
   })
 )
@@ -31,6 +35,7 @@ router.get(
   '/:eventId',
   validateEventExistence,
   asyncHandler(async (req, res) => {
+    console.log('get event', req.event)
     res.send(req.event)
   })
 )
@@ -42,6 +47,7 @@ router.put(
     const { userId } = req.params
     const { status } = req.body
     const user = req.event.users.find((p) => p.discordID === userId)
+    console.log('update user', userId, status, user)
 
     if (req.event.status !== 'not-started' && req.event.status !== 'ready-to-start') {
       const statusMessages = {
@@ -72,6 +78,7 @@ router.put(
     const { eventId } = req.params
     const { participantLimit } = req.body
     const currentParticipants = req.event.users.filter((user) => user.status === 'attending').length
+    console.log('update event', eventId, req.body, currentParticipants)
 
     if (req.body.status != 'finished' && req.event.status !== 'not-started')
       // tüm statuler için özel mesaj gönder
