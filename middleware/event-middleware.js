@@ -15,17 +15,28 @@ const validateParticipantLimit = (req, res, next) => {
 const validateStartTime = (req, res, next) => {
   const { startTime } = req.body
   const eventTime = moment(startTime)
+
+  if (req.event) {
+    const eventStartTime = moment(req.event.startTime).toISOString()
+    const formattedEventTime = eventTime.toISOString()
+
+    if (eventStartTime === formattedEventTime) return next()
+  }
+
   if (!eventTime.isValid()) {
     return res.status(400).send({ error: 'Invalid start time format.' })
   }
+
   const now = moment()
   if (eventTime.isBefore(now)) {
     return res.status(400).send({ error: 'You cannot interact with an event in the past.' })
   }
+
   const maxAdvanceTime = moment().add(45, 'days')
   if (eventTime.isAfter(maxAdvanceTime)) {
     return res.status(400).send({ error: 'You cannot create an event more than 45 days in advance.' })
   }
+
   next()
 }
 
