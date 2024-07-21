@@ -2,8 +2,10 @@ const router = require('express').Router()
 const eventService = require('../services/event-service')
 const {
   validateParticipantLimit,
-  validateStartTime,
+  validateStartTimeForCreate,
+  validateStartTimeForUpdate,
   validateEventExistence,
+  validateStatus,
   asyncHandler
 } = require('../middleware/event-middleware')
 
@@ -22,7 +24,7 @@ router.get(
 router.post(
   '/',
   validateParticipantLimit,
-  validateStartTime,
+  validateStartTimeForCreate,
   asyncHandler(async (req, res) => {
     console.log('create event', req.body)
     const event = await eventService.insert(req.body)
@@ -73,16 +75,15 @@ router.put(
   '/:eventId',
   validateEventExistence,
   validateParticipantLimit,
-  validateStartTime,
+  validateStartTimeForUpdate,
+  validateStatus,
   asyncHandler(async (req, res) => {
     const { eventId } = req.params
     const { participantLimit } = req.body
     const currentParticipants = req.event.users.filter((user) => user.status === 'attending').length
-    console.log('update event', eventId, req.body, currentParticipants)
+    const currentStatus = req.event.status
 
-    if (req.body.status != 'finished' && req.event.status !== 'not-started')
-      // tüm statuler için özel mesaj gönder
-      return res.status(400).send({ error: 'You can only update events that have not started yet.' })
+    console.log('update event', eventId, req.body, currentParticipants)
 
     if (participantLimit && currentParticipants > participantLimit) {
       return res.status(400).send({
