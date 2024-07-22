@@ -81,7 +81,6 @@ router.put(
     const { eventId } = req.params
     const { participantLimit } = req.body
     const currentParticipants = req.event.users.filter((user) => user.status === 'attending').length
-    const currentStatus = req.event.status
 
     console.log('update event', eventId, req.body, currentParticipants)
 
