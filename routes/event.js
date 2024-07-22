@@ -81,7 +81,6 @@ router.put(
     const { eventId } = req.params
     const { participantLimit } = req.body
     const currentParticipants = req.event.users.filter((user) => user.status === 'attending').length
-    const currentStatus = req.event.status
 
     console.log('update event', eventId, req.body, currentParticipants)
 
@@ -90,8 +89,10 @@ router.put(
         error: `Participant limit cannot be less than current number of attending users: ${currentParticipants}`
       })
     }
-    const updatedEvent = await eventService.updateEvent(eventId, req.body)
-    res.send(updatedEvent)
+
+    const event = await eventService.update(eventId, req.body)
+
+    res.send(event)
   })
 )
 
