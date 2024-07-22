@@ -18,13 +18,6 @@ class EventService extends BaseService {
     if (creator) query.creator = creator
     return this.model.find(query)
   }
-
-  async updateEvent(eventId, eventData) {
-    const event = await this.model.findById(eventId)
-    Object.assign(event, eventData)
-    await event.save()
-    return event
-  }
 }
 
 module.exports = new EventService(Event)
