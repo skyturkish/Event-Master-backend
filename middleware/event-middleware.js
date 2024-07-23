@@ -38,7 +38,7 @@ const validateStartTimeForUpdate = (req, res, next) => {
 
   if (!startTime && !eventTime.isValid()) return res.status(400).send({ error: 'Invalid start time format.' })
 
-  if (eventStartTime === formattedEventTime) {
+  if (!startTime || eventStartTime === formattedEventTime) {
   } else {
     const now = moment()
 
