@@ -75,10 +75,5 @@ const EventSchema = new mongoose.Schema(
   { timestamps: true }
 )
 
-// TODO sil bunu
-EventSchema.methods.canAddParticipant = function () {
-  const currentParticipants = this.users.filter((user) => user.status !== 'invited').length
-  return currentParticipants < this.participantLimit
-}
 
 module.exports = mongoose.model('Event', EventSchema)
