@@ -58,7 +58,8 @@ const EventSchema = new mongoose.Schema(
     participantLimit: {
       type: Number,
       required: [true, 'Participant limit is required!'],
-      min: [1, 'Participant limit must be at least 1!']
+      min: [1, 'Participant limit must be at least 1!'],
+      max: [1024, 'Participant limit must be less than 1025!']
     },
     startTime: {
       type: Date,
