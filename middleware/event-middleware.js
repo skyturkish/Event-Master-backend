@@ -6,8 +6,8 @@ const validateParticipantLimit = (req, res, next) => {
 
   if (participantLimit === undefined) return next()
 
-  if (isNaN(participantLimit) || participantLimit < 0 || participantLimit > 1000) {
-    return res.status(400).send({ error: 'Participant limit must be a number between 0 and 1000.' })
+  if (isNaN(participantLimit) || participantLimit <= 0 || participantLimit > 1024) {
+    return res.status(400).send({ error: 'Participant limit must be a number between 1 and 1024.' })
   }
   next()
 }
