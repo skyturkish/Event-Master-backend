@@ -6,8 +6,8 @@ const validateParticipantLimit = (req, res, next) => {
 
   if (participantLimit === undefined) return next()
 
-  if (isNaN(participantLimit) || participantLimit < 0 || participantLimit > 1000) {
-    return res.status(400).send({ error: 'Participant limit must be a number between 0 and 1000.' })
+  if (isNaN(participantLimit) || participantLimit <= 0 || participantLimit > 1024) {
+    return res.status(400).send({ error: 'Participant limit must be a number between 1 and 1024.' })
   }
   next()
 }
@@ -36,22 +36,21 @@ const validateStartTimeForUpdate = (req, res, next) => {
   const eventTime = moment(startTime)
   const formattedEventTime = eventTime.toISOString()
 
-  if (startTime && req.event) {
-    if (eventStartTime === formattedEventTime) {
-    } else {
-      if (!eventTime.isValid()) return res.status(400).send({ error: 'Invalid start time format.' })
+  if (!startTime && !eventTime.isValid()) return res.status(400).send({ error: 'Invalid start time format.' })
 
-      const now = moment()
+  if (eventStartTime === formattedEventTime) {
+  } else {
+    const now = moment()
 
-      if (eventTime.isBefore(now))
-        return res.status(400).send({ error: 'You cannot interact with an event in the past.' })
+    if (eventTime.isBefore(now))
+      return res.status(400).send({ error: 'You cannot interact with an event in the past.' })
 
-      const maxAdvanceTime = moment().add(45, 'days')
+    const maxAdvanceTime = moment().add(45, 'days')
 
-      if (eventTime.isAfter(maxAdvanceTime))
-        return res.status(400).send({ error: 'You cannot create an event more than 45 days in advance.' })
-    }
+    if (eventTime.isAfter(maxAdvanceTime))
+      return res.status(400).send({ error: 'You cannot create an event more than 45 days in advance.' })
   }
+
   next()
 }
 
