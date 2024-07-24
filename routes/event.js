@@ -12,9 +12,9 @@ const {
 router.get(
   '/',
   asyncHandler(async (req, res) => {
-    const { guild, status, userDiscordID, userStatus, creator } = req.query
-    console.log('get events by these queries', guild, status, userDiscordID, userStatus, creator)
-    const events = await eventService.findByCriteria(guild, status, userDiscordID, userStatus, creator)
+    const { guild, statuses, userDiscordID, userStatus, creator } = req.query
+    console.log('get events by these queries', guild, statuses, userDiscordID, userStatus, creator)
+    const events = await eventService.findByCriteria(guild, statuses, userDiscordID, userStatus, creator)
     console.log('found events', events)
     if (!events.length) return res.status(404).send({ error: 'No events found' })
     res.send(events)
