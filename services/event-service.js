@@ -2,10 +2,10 @@ const BaseService = require('./base-service')
 const Event = require('../models/event')
 
 class EventService extends BaseService {
-  async findByCriteria(guild, status, userDiscordID, userStatus, creator) {
+  async findByCriteria(guild, statuses, userDiscordID, userStatus, creator) {
     const query = {}
     if (guild) query.guild = guild
-    if (status) query.status = status
+    if (statuses) query.status = { $in: statuses.split(',').map((status) => status.trim()) }
     if (userDiscordID) {
       if (userStatus) {
         query['users'] = {

@@ -14,8 +14,8 @@ const discordIDSchema = {
 
 // Enum for user status
 const userStatusEnum = {
-  values: ['attending', 'declined', 'considering', 'invited'],
-  message: 'Status must be one of attending, declined, considering, invited'
+  values: ['attending', 'declined', 'considering', 'invited', 'waitlist'],
+  message: 'Status must be one of attending, declined, considering, invited, waitlist'
 }
 
 // Schema for user
@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema(
       default: 'invited'
     }
   },
-  { _id: false }
+  { _id: false, timestamps: true }
 )
 
 // Enum for event status
@@ -75,10 +75,12 @@ const EventSchema = new mongoose.Schema(
   { timestamps: true }
 )
 
-// TODO sil bunu
-EventSchema.methods.canAddParticipant = function () {
-  const currentParticipants = this.users.filter((user) => user.status !== 'invited').length
-  return currentParticipants < this.participantLimit
-}
+EventSchema.pre('save', function (next) {
+  // if users list is so long this take a lot of time to sort
+  if (this.users && this.users.length > 1 && this.users.some((user) => user.status === 'waitlist')) {
+    this.users.sort((a, b) => a.updatedAt - b.updatedAt)
+  }
+  next()
+})
 
 module.exports = mongoose.model('Event', EventSchema)
