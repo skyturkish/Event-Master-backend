@@ -75,5 +75,12 @@ const EventSchema = new mongoose.Schema(
   { timestamps: true }
 )
 
+EventSchema.pre('save', function (next) {
+  // if users list is so long this take a lot of time to sort
+  if (this.users && this.users.length > 1 && this.users.some((user) => user.status === 'waitlist')) {
+    this.users.sort((a, b) => a.updatedAt - b.updatedAt)
+  }
+  next()
+})
 
 module.exports = mongoose.model('Event', EventSchema)
