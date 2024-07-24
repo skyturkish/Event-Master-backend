@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema(
       default: 'invited'
     }
   },
-  { _id: false }
+  { _id: false, timestamps: true }
 )
 
 // Enum for event status
