@@ -62,7 +62,7 @@ test('The first user on the waitlist joins the event when a participant leaves',
   const newEvent = {
     title: '2 kişilik CS:GO turnuvası',
     creator: '213902184092',
-    guild: '123091249012',
+    guild: '1264210046905225346',
     participantLimit: 2,
     startTime: '2024-07-30T18:00:00.000Z'
   }
@@ -138,3 +138,55 @@ test('The first user on the waitlist joins the event when a participant leaves',
 
   expect(event.body.users.find((user) => user.status === 'waitlist').discordID).toBe('5235325325')
 })
+
+// test('little test', async () => {
+//   const newEvent = {
+//     title: '3 kişilik CS:GO turnuvası',
+//     creator: '213902184092',
+//     guild: '1264210046905225346',
+//     participantLimit: 3,
+//     startTime: '2024-07-30T18:00:00.000Z'
+//   }
+
+//   const createResponse = await request(app).post('/event').send(newEvent)
+//   const eventId = createResponse.body._id
+
+//   const response = await request(app).get(`/event/${eventId}`)
+
+//   expect(response.status).toBe(200)
+//   expect(response.body._id).toBe(eventId)
+//   expect(response.body.title).toBe(newEvent.title)
+//   expect(response.body.description).toBe(newEvent.description)
+//   expect(response.body.participantLimit).toBe(newEvent.participantLimit)
+//   expect(response.body.startTime).toBe(newEvent.startTime)
+
+//   const updateUserStatus = async (userId, status) => {
+//     return await request(app).put(`/event/${eventId}/users/${userId}`).send({ status })
+//   }
+
+//   await updateUserStatus('123218739812', 'attending')
+//   await updateUserStatus('12381273129837129', 'attending')
+//   let event = await updateUserStatus('40912839012380912', 'attending')
+
+//   let attendingUsers = event.body.users.filter((user) => user.status === 'attending')
+
+//   if (attendingUsers.length === event.body.participantLimit) {
+//     event = await request(app).put(`/event/${eventId}`).send({
+//       status: 'ready-to-start'
+//     })
+//   }
+
+//   event = await request(app).get(`/event/${eventId}`)
+
+//   expect(event.body.users.length).toBe(3)
+//   await updateUserStatus('43232423423', 'attending')
+//   event = await updateUserStatus('4234324324', 'attending')
+
+//   console.log('event', event.body)
+
+//   event = await updateUserStatus('12381273129837129', 'declined')
+
+//   console.log('event', event.body)
+
+//   expect(event.body.users.find((user) => user.status === 'waitlist').discordID).toBe('43232423423')
+// })
