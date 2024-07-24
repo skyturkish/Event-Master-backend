@@ -61,13 +61,38 @@ router.put(
       return res.status(400).send({ error: statusMessages[req.event.status] || 'Invalid status' })
     }
 
-    if (user) {
-      user.status = status
-    } else {
-      req.event.users.push({ discordID: userId, status })
+    let currentParticipants = req.event.users.filter((user) => user.status === 'attending')
+    let newStatus = status
+
+    if (
+      req.event.status === 'ready-to-start' &&
+      currentParticipants.length === req.event.participantLimit &&
+      newStatus === 'attending'
+    ) {
+      newStatus = 'waitlist'
     }
-    await req.event.save()
-    res.send(req.event)
+
+    if (user) {
+      user.status = newStatus
+    } else {
+      req.event.users.push({ discordID: userId, status: newStatus })
+    }
+
+    let event = await req.event.save()
+
+    currentParticipants = event.users.filter((user) => user.status === 'attending')
+
+    if (
+      req.event.participantLimit > currentParticipants.length &&
+      event.users.some((user) => user.status === 'waitlist')
+    ) {
+      const waitlistUser = event.users.find((user) => user.status === 'waitlist')
+      waitlistUser.status = 'attending'
+      event = await event.save()
+      // send notification to user
+    }
+
+    res.send(event)
   })
 )
 
