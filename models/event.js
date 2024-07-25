@@ -83,7 +83,6 @@ EventSchema.pre('save', function (next) {
   next()
 })
 
-// Create index for guild and status
 EventSchema.index({ guild: 1 })
 
 module.exports = mongoose.model('Event', EventSchema)
