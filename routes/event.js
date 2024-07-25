@@ -51,6 +51,8 @@ router.put(
     const user = req.event.users.find((p) => p.discordID === userId)
     console.log('update user', userId, status, user)
 
+    if (user && user.status === status) return res.status(400).send({ error: 'User already has this status' })
+
     if (req.event.status !== 'not-started' && req.event.status !== 'ready-to-start') {
       const statusMessages = {
         ongoing: 'This event is currently ongoing, you can no longer make a decision.',
