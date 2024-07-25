@@ -137,6 +137,10 @@ test('The first user on the waitlist joins the event when a participant leaves',
   event = await updateUserStatus('1232187398125', 'declined')
 
   expect(event.body.users.find((user) => user.status === 'waitlist').discordID).toBe('5235325325')
+
+  event = await updateUserStatus('43232423423', 'attending')
+
+  expect(event.body.users.find((user) => user.discordID === '43232423423').status).toBe('attending')
 })
 
 // test('little test', async () => {
