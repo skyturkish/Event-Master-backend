@@ -32,36 +32,27 @@ const validateStartTimeForCreate = (req, res, next) => {
 
 const validateStartTimeForUpdate = (req, res, next) => {
   const { startTime } = req.body
+  const eventStartTime = moment(req.event.startTime).toISOString()
+  const eventTime = moment(startTime)
+  const formattedEventTime = eventTime.toISOString()
 
-  if (startTime) {
-    const eventTime = moment(startTime)
+  if (startTime && req.event) {
+    if (eventStartTime === formattedEventTime) {
+    } else {
+      if (!eventTime.isValid()) return res.status(400).send({ error: 'Invalid start time format.' })
 
-    if (req.event) {
-      const eventStartTime = moment(req.event.startTime).toISOString()
+      const now = moment()
 
-      const formattedEventTime = eventTime.toISOString()
+      if (eventTime.isBefore(now))
+        return res.status(400).send({ error: 'You cannot interact with an event in the past.' })
 
-      if (eventStartTime === formattedEventTime) {
-        next()
-      }
+      const maxAdvanceTime = moment().add(45, 'days')
+
+      if (eventTime.isAfter(maxAdvanceTime))
+        return res.status(400).send({ error: 'You cannot create an event more than 45 days in advance.' })
     }
-
-    if (!eventTime.isValid()) return res.status(400).send({ error: 'Invalid start time format.' })
-
-    const now = moment()
-
-    if (eventTime.isBefore(now))
-      return res.status(400).send({ error: 'You cannot interact with an event in the past.' })
-
-    const maxAdvanceTime = moment().add(45, 'days')
-
-    if (eventTime.isAfter(maxAdvanceTime))
-      return res.status(400).send({ error: 'You cannot create an event more than 45 days in advance.' })
-
-    next()
-  } else {
-    next()
   }
+  next()
 }
 
 const validateStatus = (req, res, next) => {
@@ -71,8 +62,8 @@ const validateStatus = (req, res, next) => {
 
   const newStatus = req.body.status
 
-  if (currentStatus == newStatus) next()
-  else {
+  if (currentStatus == newStatus) {
+  } else {
     if (newStatus == 'not-started')
       return res.status(400).send({ error: 'You cannot change the status back to not-started.' })
     else if (newStatus == 'ready-to-start') {
@@ -116,7 +107,7 @@ const validateEventExistence = async (req, res, next) => {
   if (!event) {
     return res.status(404).send({ error: 'Event not found' })
   }
-  req.event = event // Attach event to the request object
+  req.event = event
   next()
 }
 
