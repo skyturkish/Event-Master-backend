@@ -16,7 +16,7 @@ router.get(
     console.log('get events by these queries', guild, statuses, userDiscordID, userStatus, creator)
     const events = await eventService.findByCriteria(guild, statuses, userDiscordID, userStatus, creator)
     console.log('found events', events)
-    if (!events.length) return res.status(404).send({ error: 'No events found' })
+    if (!events.length) return res.status(404).send({ error: 'noEventsFound' })
     res.send(events)
   })
 )
@@ -56,12 +56,12 @@ router.put(
     } else {
       if (req.event.status !== 'not-started' && req.event.status !== 'ready-to-start') {
         const statusMessages = {
-          ongoing: 'This event is currently ongoing, you can no longer make a decision.',
-          finished: 'This event has already finished, you can no longer make a decision.',
-          canceled: 'This event has been canceled, you can no longer make a decision.'
+          ongoing: 'thisEventIsCurrentlyOngoing',
+          finished: 'thisEventHasAlreadyFinished',
+          canceled: 'thisEventHasBeenCanceled'
         }
 
-        return res.status(400).send({ error: statusMessages[req.event.status] || 'Invalid status' })
+        return res.status(400).send({ error: statusMessages[req.event.status] || 'invalidStatus' })
       }
 
       let currentParticipants = req.event.users.filter((user) => user.status === 'attending')
@@ -115,7 +115,7 @@ router.put(
 
     if (participantLimit && currentParticipants > participantLimit) {
       return res.status(400).send({
-        error: `Participant limit cannot be less than current number of attending users: ${currentParticipants}`
+        error: 'participantLimitCannotBeLessThanNumberOfAttendingUsers'
       })
     }
 
