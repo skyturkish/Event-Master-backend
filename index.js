@@ -1,10 +1,11 @@
 const express = require('express')
 const indexRouter = require('./routes/index')
 const eventRouter = require('./routes/event')
-
 const bodyParser = require('body-parser')
 
 require('./routes/mongo-connection')
+
+require('./cron-jobs')
 
 const app = express()
 
