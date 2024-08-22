@@ -22,7 +22,7 @@ test('POST /event - it should create an event', async () => {
     creator: '774199734662725662',
     guild: '1264210046905225346',
     participantLimit: 2,
-    startTime: '2024-07-30T18:00:00.000Z'
+    startTime: '2024-08-30T18:00:00.000Z'
   }
 
   const response = await request(app).post('/event').send(newEvent)
@@ -42,7 +42,7 @@ test('GET /event/:eventId - it should retrieve the created event by ID', async (
     creator: '774199734662725662',
     guild: '1264210046905225346',
     participantLimit: 2,
-    startTime: '2024-07-30T18:00:00.000Z'
+    startTime: '2024-08-30T18:00:00.000Z'
   }
 
   const createResponse = await request(app).post('/event').send(newEvent)
@@ -64,7 +64,7 @@ test('The first user on the waitlist joins the event when a participant leaves',
     creator: '213902184092',
     guild: '1264210046905225346',
     participantLimit: 2,
-    startTime: '2024-07-30T18:00:00.000Z'
+    startTime: '2024-08-30T18:00:00.000Z'
   }
 
   const createResponse = await request(app).post('/event').send(newEvent)
