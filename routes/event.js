@@ -127,6 +127,8 @@ router.put(
 
 router.post('/run-cron', async (req, res) => {
   try {
+    const oneDayAgo = new Date(new Date().getTime() - 24 * 60 * 60 * 1000)
+
     const events = await eventService.getExpiredEvents()
 
     console.log('Events fetched:', events)
@@ -146,7 +148,7 @@ router.post('/run-cron', async (req, res) => {
     res.status(200).send(`${events.length} events updated to finished.`)
   } catch (error) {
     console.error('Error updating events:', error)
-    res.status(500).send('Error updating events.')
+    res.status(500).send('Error updating events.', error)
   }
 })
 
