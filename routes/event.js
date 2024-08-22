@@ -125,7 +125,7 @@ router.put(
   })
 )
 
-app.post('/run-cron', async (req, res) => {
+router.post('/run-cron', async (req, res) => {
   try {
     const oneDayAgo = new Date()
     oneDayAgo.setDate(oneDayAgo.getDate() - 1)
