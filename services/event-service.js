@@ -18,6 +18,23 @@ class EventService extends BaseService {
     if (creator) query.creator = creator
     return this.model.find(query)
   }
+
+  async getExpiredEvents() {
+    const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000)
+
+    const query = {
+      startTime: { $lte: oneDayAgo },
+      status: { $nin: ['finished', 'canceled'] }
+    }
+
+    try {
+      const events = await this.model.find(query)
+      return events
+    } catch (error) {
+      console.error('Error fetching expired and finished events:', error)
+      throw error
+    }
+  }
 }
 
 module.exports = new EventService(Event)

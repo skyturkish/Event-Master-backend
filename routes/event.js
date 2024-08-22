@@ -125,4 +125,29 @@ router.put(
   })
 )
 
+router.post('/run-cron', async (req, res) => {
+  try {
+    const events = await eventService.getExpiredEvents()
+
+    console.log('Events fetched:', events)
+
+    for (const event of events) {
+      console.log('Processing event:', event._id, 'with startTime:', event.startTime)
+
+      if (event.startTime <= oneDayAgo) {
+        event.status = 'finished'
+        await event.save()
+        console.log('Event updated to finished:', event._id)
+      } else {
+        console.log('Event startTime is after one day ago, skipping:', event._id)
+      }
+    }
+
+    res.status(200).send(`${events.length} events updated to finished.`)
+  } catch (error) {
+    console.error('Error updating events:', error)
+    res.status(500).send('Error updating events.')
+  }
+})
+
 module.exports = router
