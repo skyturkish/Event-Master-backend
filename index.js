@@ -5,8 +5,6 @@ const bodyParser = require('body-parser')
 
 require('./routes/mongo-connection')
 
-require('./cron-jobs')
-
 const app = express()
 
 app.use(bodyParser.json())

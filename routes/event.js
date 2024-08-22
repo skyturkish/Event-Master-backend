@@ -125,4 +125,26 @@ router.put(
   })
 )
 
+app.post('/run-cron', async (req, res) => {
+  try {
+    const oneDayAgo = new Date()
+    oneDayAgo.setDate(oneDayAgo.getDate() - 1)
+
+    const events = await eventService.load({
+      startTime: { $lte: oneDayAgo },
+      status: { $nin: ['finished', 'canceled'] }
+    })
+
+    for (const event of events) {
+      event.status = 'finished'
+      await event.save()
+    }
+
+    res.status(200).send(`${events.length} events updated to finished.`)
+  } catch (error) {
+    console.error('Error updating events:', error)
+    res.status(500).send('Error updating events.')
+  }
+})
+
 module.exports = router
